@@ -17,6 +17,7 @@ class CreateDetailsCommandesTable extends Migration {
 			$table->float('prix');
 			$table->tinyInteger('quantite');
 			$table->timestamps();
+            $table->softDeletes();
 		});
 	}
 
