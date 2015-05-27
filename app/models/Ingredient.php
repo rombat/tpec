@@ -1,14 +1,29 @@
 <?php
 
 class Ingredient extends Eloquent {
-
-    use SoftDeletingTrait;
-
 	protected $guarded = array();
 
 	public static $rules = array(
 		'nom' => 'required',
 		'description' => 'required',
-		'prix' => 'required'
+		'active' => 'boolean',
+        'image' => 'image|max:2000',
+
 	);
+
+    public function conditionnements()
+    {
+        return $this->belongsToMany('Conditionnement')->withPivot('prix');
+    }
+
+    public function recettes()
+    {
+        return $this->belongsToMany('Recette')->withPivot('quantite', 'unite');
+    }
+
+    public static function unitesDispos()
+    {
+        $unites = DB::table('ingredient_recette')->select(['unite'])->distinct()->get();
+        return $unites;
+    }
 }

@@ -92,5 +92,5 @@ require app_path().'/filters.php';
 | Chargement des tags personnalisés pour Blade
 |
 */
-require app_path().'/composers.php';
+//require app_path().'/composers.php';
 require app_path().'/bladetags.php';

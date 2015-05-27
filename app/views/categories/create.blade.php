@@ -1,10 +1,14 @@
-@extends('layouts.scaffold')
+@extends('template')
+
+@section('title')
+    Créer Catégorie
+@stop
 
 @section('main')
 
 <div class="row">
     <div class="col-md-10 col-md-offset-2">
-        <h1>Create Category</h1>
+        <h1>Créer Catégorie</h1>
 
         @if ($errors->any())
         	<div class="alert alert-danger">
@@ -16,7 +20,7 @@
     </div>
 </div>
 
-{{ Form::open(array('route' => 'categories.store', 'class' => 'form-horizontal')) }}
+{{ Form::open(array('route' => 'categories.store', 'class' => 'form-horizontal', 'files' => true)) }}
 
         <div class="form-group">
             {{ Form::label('nom', 'Nom:', array('class'=>'col-md-2 control-label')) }}
@@ -32,11 +36,36 @@
             </div>
         </div>
 
+        <div class="form-group">
+            {{ Form::label('active', 'Active:', array('class'=>'col-md-2 control-label')) }}
+            <div class="col-sm-10">
+              {{ Form::checkbox('active') }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ Form::label('image', 'Image:', array('class'=>'col-md-2 control-label')) }}
+            <div class="col-sm-10">
+              {{ Form::file('image', Input::old('image'), array('class'=>'form-control', 'placeholder'=>'Image')) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ Form::label('parent_id', 'Catégorie parente:', array('class'=>'col-md-2 control-label')) }}
+            <div class="col-sm-10">
+                <?php
+                $categories = Categorie::all(['id', 'nom'])->lists('nom', 'id');
+                $categories[''] = 'Aucune';
+                ?>
+                {{ Form::select('parent_id', $categories) }}
+            </div>
+        </div>
+
 
 <div class="form-group">
     <label class="col-sm-2 control-label">&nbsp;</label>
     <div class="col-sm-10">
-      {{ Form::submit('Create', array('class' => 'btn btn-lg btn-primary')) }}
+      {{ Form::submit('Créer', array('class' => 'btn btn-lg btn-primary')) }}
     </div>
 </div>
 

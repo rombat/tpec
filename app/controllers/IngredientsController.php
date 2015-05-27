@@ -2,17 +2,6 @@
 
 class IngredientsController extends BaseController {
 
-	/**
-	 * Ingredient Repository
-	 *
-	 * @var Ingredient
-	 */
-	protected $ingredient;
-
-	public function __construct(Ingredient $ingredient)
-	{
-		$this->ingredient = $ingredient;
-	}
 
 	/**
 	 * Display a listing of the resource.
@@ -21,7 +10,7 @@ class IngredientsController extends BaseController {
 	 */
 	public function index()
 	{
-		$ingredients = $this->ingredient->all();
+		$ingredients = Ingredient::orderBy('nom')->get();
 
 		return View::make('ingredients.index', compact('ingredients'));
 	}
@@ -45,10 +34,36 @@ class IngredientsController extends BaseController {
 	{
 		$input = Input::all();
 		$validation = Validator::make($input, Ingredient::$rules);
+        $this->validerConditionnements($validation);
 
 		if ($validation->passes())
 		{
-			$this->ingredient->create($input);
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/ingredients';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = '';
+            }
+
+			$ingredient = Ingredient::create(array_except($input, 'conditionnements'));
+
+            // on chope tous les conditionnements et on prepare un array pret à être sync
+            $conditionnements = Input::get('conditionnements');
+            //dd($conditionnements);
+            $conditionnementsTries = [];
+            foreach ($conditionnements['id'] as $index => $conditionnementId) {
+                $conditionnementsTries[$conditionnementId] = array(
+                    'prix' => $conditionnements['prix'][$index]
+                );
+            }
+            //on sync
+            $ingredient->conditionnements()->sync($conditionnementsTries);
+
 
 			return Redirect::route('ingredients.index');
 		}
@@ -56,32 +71,28 @@ class IngredientsController extends BaseController {
 		return Redirect::route('ingredients.create')
 			->withInput()
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  Ingredient  $ingredient
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Ingredient  $ingredient)
 	{
-		$ingredient = $this->ingredient->findOrFail($id);
-
 		return View::make('ingredients.show', compact('ingredient'));
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  Ingredient  $ingredient
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(Ingredient  $ingredient)
 	{
-		$ingredient = $this->ingredient->find($id);
-
 		if (is_null($ingredient))
 		{
 			return Redirect::route('ingredients.index');
@@ -93,39 +104,71 @@ class IngredientsController extends BaseController {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  Ingredient  $ingredient
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Ingredient  $ingredient)
 	{
-		$input = array_except(Input::all(), '_method');
+		$input = array_except(Input::all(), ['_method']);
 		$validation = Validator::make($input, Ingredient::$rules);
+        $this->validerConditionnements($validation);
 
 		if ($validation->passes())
 		{
-			$ingredient = $this->ingredient->find($id);
-			$ingredient->update($input);
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/categories';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = $ingredient->image;
+            }
 
-			return Redirect::route('ingredients.show', $id);
+            $ingredient->update(array_except($input, 'conditionnements'));
+
+            // on chope tous les conditionnements et on prepare un array pret à être sync
+            $conditionnements = Input::get('conditionnements');
+            //dd($conditionnements);
+            $conditionnementsTries = [];
+            foreach ($conditionnements['id'] as $index => $conditionnementId) {
+                $conditionnementsTries[$conditionnementId] = array(
+                    'prix' => $conditionnements['prix'][$index]
+                );
+            }
+            //on sync
+            $ingredient->conditionnements()->sync($conditionnementsTries);
+
+
+			return Redirect::route('ingredients.show', $ingredient->id);
 		}
 
-		return Redirect::route('ingredients.edit', $id)
+		return Redirect::route('ingredients.edit', $ingredient->id)
 			->withInput()
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $id
+	 * @param  Ingredient  $ingredient
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Ingredient  $ingredient)
 	{
-		$this->ingredient->find($id)->delete();
+		$ingredient->delete();
 
 		return Redirect::route('ingredients.index');
 	}
+
+    public static function validerConditionnements(\Illuminate\Validation\Validator $validation)
+    {
+        $validation->each('conditionnements.prix', ['required', 'min:1', 'numeric']);
+        $validation->each('conditionnements.id', ['required', 'min:1', 'exists:conditionnements,id']);
+
+    }
 
 }

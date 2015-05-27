@@ -1,31 +1,34 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!doctype html>
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
     <title>@yield('title')</title>
-
-    @include('master.styles')
-
-    <!--[if lt IE 9]>
-    {{ HTML::script('js/html5shiv.js') }}
-    {{ HTML::script('js/respond.min.js') }}
-    <![endif]-->
-
-</head><!--/head-->
+    {{ HTML::style(asset('/css/bootstrap.min.css')) }}
+    {{ HTML::style(asset('/css/font-awesome.min.css')) }}
+    {{ HTML::style(asset('/css/perso.css')) }}
+</head>
 
 <body>
+@include('master.navbar')
 
-@include('master.header')
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
 
+            @if (Session::has('message'))
+                <div class="flash alert">
+                    <p>{{ Session::get('message') }}</p>
+                </div>
+            @endif
 
-@yield('content')
+            @yield('main')
 
+        </div>
+    </div>
+</div>
 
-@include('footer')
-@include('scripts')
-
+{{ HTML::script(asset('/js/jquery.js')) }}
+{{ HTML::script(asset('/js/bootstrap.min.js')) }}
+@yield('scripts_additionnels')
 </body>
 </html>

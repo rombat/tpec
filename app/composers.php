@@ -18,7 +18,7 @@
 
 
 /* Ici, View Composer pour préparer des containers d'assets (js, css...) pour que les vues soient plus claires à lire */
-View::composer(array('template','errors.maintenance'), function() {
+/*View::composer(array('template','errors.maintenance'), function() {
 
     // Container pour les scripts JS chargés via CDN
     Asset::add(array(
@@ -59,7 +59,7 @@ View::composer(array('template','errors.maintenance'), function() {
         'css/maingauche.less',
         'css/styles_armg.css'));
 }
-);
+);*/
 
 /* View composer pour générer le menu sans passer par un controller. On choppe toutes les categories actives, ainsi que les marques */
 View::composer('master.navbar', function($vue) {
@@ -72,29 +72,17 @@ View::composer('master.navbar', function($vue) {
 });
 
 /* View composer pour générer le menu off-canvas sans passer par un controller. On choppe toutes les sections actives */
-View::composer(array('master.offcanvas-navbar', 'master.footer'), function($vue) {
+/*View::composer(array('master.offcanvas-navbar', 'master.footer'), function($vue) {
     $sections_meres = Section::where('actif', '=', '1')->where('parent_id', '=', '0')->orderBy('ordre')->get();
     $vue->with('sections_meres', $sections_meres);
-});
-
-/* View composer pour choper les billets du blog dans le RSS */
-View::composer('master.footer', function($vue) {
-    $feed = new SimplePie();
-    $feed->set_feed_url("http://blog.main-gauche.com/feed/");
-    $feed->enable_cache(true);
-    $feed->set_cache_location(storage_path().'/cache');
-    $feed->set_cache_duration(60*60*12);
-    $feed->set_output_encoding('utf-8');
-    $feed->init();
-    $vue->with('feed', $feed);
-});
+});*/
 
 
 /* View composer pour les carousels */
-View::composer(array('statique.carousel', 'pages.home.carousel'), function($vue) {
+/*View::composer(array('statique.carousel', 'pages.home.carousel'), function($vue) {
     $carousels = CarouselHome::where('actif', '=', '1')->get();
     $vue->with('carousels', $carousels);
-});
+});*/
 
 /* View composer pour l'affichage de la box "Nos clients"
     On prend 8 commentaires clients aléatoirement dans la base */

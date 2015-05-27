@@ -1,10 +1,14 @@
-@extends('layouts.scaffold')
+@extends('template')
+
+@section('title')
+    Voir toutes les recettes
+@stop
 
 @section('main')
 
-<h1>All Recettes</h1>
+<h1>Toutes les Recettes</h1>
 
-<p>{{ link_to_route('recettes.create', 'Add New Recette', null, array('class' => 'btn btn-lg btn-success')) }}</p>
+<p>{{ link_to_route('recettes.create', 'Ajouter Recette', null, array('class' => 'btn btn-lg btn-success')) }}</p>
 
 @if ($recettes->count())
 	<table class="table table-striped">
@@ -12,12 +16,12 @@
 			<tr>
 				<th>Nom</th>
 				<th>Resume</th>
-				<th>Description</th>
-				<th>Temps_cuisson</th>
-				<th>Temps_repos</th>
 				<th>Difficulte</th>
-				<th>Nombre_personnes</th>
+				<th>Nombre de personnes</th>
 				<th>Prix</th>
+				<th>Active</th>
+				<th>Image</th>
+				<th>Categorie</th>
 				<th>&nbsp;</th>
 			</tr>
 		</thead>
@@ -25,26 +29,33 @@
 		<tbody>
 			@foreach ($recettes as $recette)
 				<tr>
-					<td>{{{ $recette->nom }}}</td>
-					<td>{{{ $recette->resume }}}</td>
-					<td>{{{ $recette->description }}}</td>
-					<td>{{{ $recette->temps_cuisson }}}</td>
-					<td>{{{ $recette->temps_repos }}}</td>
-					<td>{{{ $recette->difficulte }}}</td>
-					<td>{{{ $recette->nombre_personnes }}}</td>
-					<td>{{{ $recette->prix }}}</td>
+					<td>{{ link_to_route('recettes.show', $recette->nom, [$recette->id]) }}</td>
+					<td>{{ substr($recette->resume,0, 40) }}</td>
+					<td>@for($i = 1; $i <= $recette->difficulte; $i++)
+                            <i class="fa fa-star"></i>
+                        @endfor
+                        @while($i <= 5)
+                            <i class="fa fa-star-o"></i>
+                            @php($i++)
+                        @endwhile</td>
+					<td>{{{ $recette->nb_personnes }}}</td>
+					<td>{{ number_format($recette->prix, 2, ',', ' ') }} €</td>
+					<td>@if($recette->active) <i class="fa fa-check"></i>@else <i class="fa fa-times"></i>@endif</td>
+                    <td><img src="{{ asset('/images/recettes/' . $recette->image) }}" alt="" width="80"/></td>
+					<td>{{ link_to_route('categories.show', $recette->categorie->nom, [$recette->categorie->id]) }}</td>
                     <td>
                         {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('recettes.destroy', $recette->id))) }}
-                            {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
+                            {{ Form::button('<i class="glyphicon glyphicon-remove"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
                         {{ Form::close() }}
-                        {{ link_to_route('recettes.edit', 'Edit', array($recette->id), array('class' => 'btn btn-info')) }}
+                        <a href="{{ route('recettes.edit', [$recette->id]) }}" class="btn btn-info">
+                            <i class="glyphicon glyphicon-pencil"></i></a>
                     </td>
 				</tr>
 			@endforeach
 		</tbody>
 	</table>
 @else
-	There are no recettes
+	Pas de recettes
 @endif
 
 @stop

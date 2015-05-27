@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'tpec',
-			'username'  => 'homestead',
-			'password'  => 'secret',
+			'host'      => 'sgbd.nesti.loc',
+			'database'  => 'batigne',
+			'username'  => 'batigne',
+			'password'  => 'batigne',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

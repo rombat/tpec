@@ -2,17 +2,6 @@
 
 class RecettesController extends BaseController {
 
-	/**
-	 * Recette Repository
-	 *
-	 * @var Recette
-	 */
-	protected $recette;
-
-	public function __construct(Recette $recette)
-	{
-		$this->recette = $recette;
-	}
 
 	/**
 	 * Display a listing of the resource.
@@ -21,7 +10,7 @@ class RecettesController extends BaseController {
 	 */
 	public function index()
 	{
-		$recettes = $this->recette->all();
+		$recettes = Recette::orderBy('nom')->get();
 
 		return View::make('recettes.index', compact('recettes'));
 	}
@@ -44,44 +33,65 @@ class RecettesController extends BaseController {
 	public function store()
 	{
 		$input = Input::all();
+        //dd($input);
 		$validation = Validator::make($input, Recette::$rules);
+        $this->validerIngredients($validation);
 
 		if ($validation->passes())
 		{
-			$this->recette->create($input);
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/recettes';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = '';
+            }
+            // on sauve la recette, sans les ingredients (table pivot, a sync a part)
+			$recette = Recette::create(array_except($input, 'ingredients'));
+            // on chope tous les ingredients et on prepare un array pret à être sync
+            $ingredients = Input::get('ingredients');
+            $ingredientsTries = [];
+            foreach ($ingredients['id'] as $index => $ingredientId) {
+                $ingredientsTries[$ingredientId] = array(
+                    'quantite' => $ingredients['quantite'][$index],
+                    'unite' => $ingredients['unite'][$index]
+                );
+            }
+            //on sync
+            $recette->ingredients()->sync($ingredientsTries);
 
-			return Redirect::route('recettes.index');
+            return Redirect::route('recettes.index');
 		}
-
+        //dd($validation);
 		return Redirect::route('recettes.create')
-			->withInput()
+			->withInput(Input::except(['ingredients']))
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  Recette  $recette
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Recette  $recette)
 	{
-		$recette = $this->recette->findOrFail($id);
-
 		return View::make('recettes.show', compact('recette'));
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  Recette  $recette
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(Recette  $recette)
 	{
-		$recette = $this->recette->find($id);
-
 		if (is_null($recette))
 		{
 			return Redirect::route('recettes.index');
@@ -93,26 +103,51 @@ class RecettesController extends BaseController {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  Recette  $recette
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Recette  $recette)
 	{
 		$input = array_except(Input::all(), '_method');
 		$validation = Validator::make($input, Recette::$rules);
+        $this->validerIngredients($validation);
 
 		if ($validation->passes())
 		{
-			$recette = $this->recette->find($id);
-			$recette->update($input);
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/recettes';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = $recette->image;
+            }
 
-			return Redirect::route('recettes.show', $id);
+			$recette->update(array_except($input, 'ingredients'));
+
+            // on chope tous les ingredients et on prepare un array pret à être sync
+            $ingredients = Input::get('ingredients');
+            $ingredientsTries = [];
+            foreach ($ingredients['id'] as $index => $ingredientId) {
+                $ingredientsTries[$ingredientId] = array(
+                    'quantite' => $ingredients['quantite'][$index],
+                    'unite' => $ingredients['unite'][$index]
+                );
+            }
+            //on sync
+            $recette->ingredients()->sync($ingredientsTries);
+
+
+			return Redirect::route('recettes.show', $recette->id);
 		}
 
-		return Redirect::route('recettes.edit', $id)
+		return Redirect::route('recettes.edit', $recette->id)
 			->withInput()
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
@@ -121,11 +156,18 @@ class RecettesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Recette  $recette)
 	{
-		$this->recette->find($id)->delete();
+		$recette->delete();
 
 		return Redirect::route('recettes.index');
 	}
 
+    public static function validerIngredients(\Illuminate\Validation\Validator $validation)
+    {
+        $validation->each('ingredients.quantite', ['required', 'min:1', 'numeric']);
+        $validation->each('ingredients.unite', ['required', 'min:1']);
+        $validation->each('ingredients.id', ['required', 'min:1', 'exists:ingredients,id']);
+
+    }
 }

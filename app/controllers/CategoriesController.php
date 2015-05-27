@@ -3,25 +3,13 @@
 class CategoriesController extends BaseController {
 
 	/**
-	 * Category Repository
-	 *
-	 * @var Category
-	 */
-	protected $categorie;
-
-	public function __construct(Category $categorie)
-	{
-		$this->categorie = $categorie;
-	}
-
-	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		$categories = $this->categorie->all();
+		$categories = Categorie::whereNull('parent_id')->get();
 
 		return View::make('categories.index', compact('categories'));
 	}
@@ -44,11 +32,26 @@ class CategoriesController extends BaseController {
 	public function store()
 	{
 		$input = Input::all();
-		$validation = Validator::make($input, Category::$rules);
+        //dd($input);
+		$validation = Validator::make($input, Categorie::$rules);
 
 		if ($validation->passes())
 		{
-			$this->categorie->create($input);
+            if(Input::get('parent_id') == null) {
+                $input['parent_id'] = null;
+            }
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/categories';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = '';
+            }
+			Categorie::create($input);
 
 			return Redirect::route('categories.index');
 		}
@@ -56,19 +59,17 @@ class CategoriesController extends BaseController {
 		return Redirect::route('categories.create')
 			->withInput()
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  Categorie $categorie
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Categorie $categorie)
 	{
-		$categorie = $this->categorie->findOrFail($id);
-
 		return View::make('categories.show', compact('categorie'));
 	}
 
@@ -78,52 +79,65 @@ class CategoriesController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(Categorie $categorie)
 	{
-		$categorie = $this->categorie->find($id);
-
 		if (is_null($categorie))
 		{
 			return Redirect::route('categories.index');
 		}
 
-		return View::make('categories.edit', compact('categorie'));
+		return View::make('categories.edit', compact('categorie', 'categories'));
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  Categorie $categorie
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Categorie $categorie)
 	{
 		$input = array_except(Input::all(), '_method');
-		$validation = Validator::make($input, Category::$rules);
+
+		$validation = Validator::make($input, Categorie::$rules);
 
 		if ($validation->passes())
 		{
-			$categorie = $this->categorie->find($id);
+            if(Input::get('parent_id') == '') {
+                $input['parent_id'] = null;
+            }
+            if(Input::hasFile('image')) {
+                // On uploade l'image
+                $image = Input::file('image');
+                $destinationPath = public_path() . '/images/categories';
+                $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $filename);
+                // On stocke son nom en base:
+                $input['image'] = $filename;
+            } else {
+                $input['image'] = $categorie->image;
+            }
+
 			$categorie->update($input);
 
-			return Redirect::route('categories.show', $id);
+			return Redirect::route('categories.show', $categorie->id);
 		}
 
-		return Redirect::route('categories.edit', $id)
-			->withInput()
+		return Redirect::route('categories.edit', $categorie->id)
+			->withInput(Input::except('image'))
 			->withErrors($validation)
-			->with('message', 'There were validation errors.');
+			->with('message', 'Erreurs de validation.');
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $id
+	 * @param  Categorie $categorie
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Categorie $categorie)
 	{
-		$this->categorie->find($id)->delete();
+		$categorie->delete();
 
 		return Redirect::route('categories.index');
 	}
