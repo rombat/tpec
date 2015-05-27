@@ -34,7 +34,6 @@ class IngredientsController extends BaseController {
 	{
 		$input = Input::all();
 		$validation = Validator::make($input, Ingredient::$rules);
-        $this->validerConditionnements($validation);
 
 		if ($validation->passes())
 		{
@@ -67,7 +66,6 @@ class IngredientsController extends BaseController {
 
 			return Redirect::route('ingredients.index');
 		}
-
 		return Redirect::route('ingredients.create')
 			->withInput()
 			->withErrors($validation)
@@ -111,7 +109,6 @@ class IngredientsController extends BaseController {
 	{
 		$input = array_except(Input::all(), ['_method']);
 		$validation = Validator::make($input, Ingredient::$rules);
-        $this->validerConditionnements($validation);
 
 		if ($validation->passes())
 		{
@@ -131,7 +128,6 @@ class IngredientsController extends BaseController {
 
             // on chope tous les conditionnements et on prepare un array pret à être sync
             $conditionnements = Input::get('conditionnements');
-            //dd($conditionnements);
             $conditionnementsTries = [];
             foreach ($conditionnements['id'] as $index => $conditionnementId) {
                 $conditionnementsTries[$conditionnementId] = array(
@@ -163,12 +159,5 @@ class IngredientsController extends BaseController {
 
 		return Redirect::route('ingredients.index');
 	}
-
-    public static function validerConditionnements(\Illuminate\Validation\Validator $validation)
-    {
-        $validation->each('conditionnements.prix', ['required', 'min:1', 'numeric']);
-        $validation->each('conditionnements.id', ['required', 'min:1', 'exists:conditionnements,id']);
-
-    }
 
 }

@@ -25,10 +25,10 @@
         <tbody>
         <tr>
             <td>{{{ $categorie->nom }}}</td>
-            <td>{{{ $categorie->description }}}</td>
-            <td>{{{ $categorie->active }}}</td>
+            <td>{{ nl2br(e($categorie->description)) }}</td>
+            <td>@if($categorie->active) <i class="fa fa-check"></i>@else <i class="fa fa-times"></i>@endif</td>
             <td><img src="{{asset('/images/categories/' . $categorie->image)}}" alt=""
-                     class="img-responsive img-thumbnail" width="500"/></td>
+                     class="img-responsive img-thumbnail" width="400"/></td>
             <td>@if($categorie->parent_id) {{ $categorie->categorieParente->nom }} @else Aucune @endif</td>
             <td>
                 {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('categories.destroy', $categorie->id))) }}

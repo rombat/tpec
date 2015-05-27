@@ -11,6 +11,7 @@
     "doctrine/dbal": "~2.3",
     "davejamesmiller/laravel-breadcrumbs": "~2.3",
     "raveren/kint": "dev-master",
+    "cohensive/validation": "4.1.*",
     "anahkiasen/former": "~3.5",
     "patricktalmadge/bootstrapper": "~5.4"
   },
@@ -50,5 +51,6 @@
   "config": {
     "preferred-install": "dist"
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "dev",
+  "prefer-stable" : true
 }

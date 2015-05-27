@@ -33,9 +33,7 @@ class RecettesController extends BaseController {
 	public function store()
 	{
 		$input = Input::all();
-        //dd($input);
 		$validation = Validator::make($input, Recette::$rules);
-        $this->validerIngredients($validation);
 
 		if ($validation->passes())
 		{
@@ -110,7 +108,6 @@ class RecettesController extends BaseController {
 	{
 		$input = array_except(Input::all(), '_method');
 		$validation = Validator::make($input, Recette::$rules);
-        $this->validerIngredients($validation);
 
 		if ($validation->passes())
 		{
@@ -163,11 +160,4 @@ class RecettesController extends BaseController {
 		return Redirect::route('recettes.index');
 	}
 
-    public static function validerIngredients(\Illuminate\Validation\Validator $validation)
-    {
-        $validation->each('ingredients.quantite', ['required', 'min:1', 'numeric']);
-        $validation->each('ingredients.unite', ['required', 'min:1']);
-        $validation->each('ingredients.id', ['required', 'min:1', 'exists:ingredients,id']);
-
-    }
 }

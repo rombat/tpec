@@ -50,7 +50,7 @@
             {{ Form::file('image', Input::old('image'), array('class'=>'form-control', 'placeholder'=>'Image')) }}
             @if($categorie->image)
                 <img src="{{asset('/images/categories/' . $categorie->image)}}" alt="{{ $categorie->nom }}"
-                     class="img-responsive img-thumbnail" width="500"/>
+                     class="img-responsive img-thumbnail" width="400"/>
             @endif
         </div>
     </div>

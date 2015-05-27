@@ -24,10 +24,10 @@
         <tbody>
         <tr>
             <td>{{{ $ingredient->nom }}}</td>
-            <td>{{{ $ingredient->description }}}</td>
-            <td>{{{ $ingredient->active }}}</td>
+            <td>{{ nl2br(e($ingredient->description)) }}</td>
+            <td>@if($ingredient->active) <i class="fa fa-check"></i>@else <i class="fa fa-times"></i>@endif</td>
             <td><img src="{{asset('/images/ingredients/' . $ingredient->image)}}" alt=""
-                     class="img-responsive img-thumbnail" width="500"/></td>
+                     class="img-responsive img-thumbnail" width="400"/></td>
             <td>@if(!$ingredient->conditionnements)
                     Aucun
                 @else

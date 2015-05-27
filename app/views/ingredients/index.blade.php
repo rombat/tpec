@@ -11,7 +11,7 @@
 <p>{{ link_to_route('ingredients.create', 'Ajouter Ingredient', null, array('class' => 'btn btn-lg btn-success')) }}</p>
 
 @if ($ingredients->count())
-	<table class="table table-striped">
+	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
 				<th>Nom</th>
@@ -27,9 +27,9 @@
 			@foreach ($ingredients as $ingredient)
 				<tr>
 					<td>{{ link_to_route('ingredients.show', $ingredient->nom, [$ingredient->id]) }}</td>
-					<td>{{{ $ingredient->description }}}</td>
+					<td>{{{ substr($ingredient->description, 0, 80) . '...' }}}</td>
 					<td>@if($ingredient->active) <i class="fa fa-check"></i>@else <i class="fa fa-times"></i>@endif</td>
-                    <td><img src="{{ asset('/images/ingredients/' . $ingredient->image) }}" alt="" width="80"/></td>
+                    <td><div class="image-reduite"><img src="{{ asset('/images/ingredients/' . $ingredient->image) }}" alt="" width="100"/></div></td>
                     <td>@if(!$ingredient->conditionnements)
                         Aucun
                     @else

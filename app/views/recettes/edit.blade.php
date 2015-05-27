@@ -97,7 +97,7 @@
             {{ Form::file('image', null, array('class'=>'form-control', 'placeholder'=>'Image')) }}
             @if($recette->image)
                 <img src="{{asset('/images/recettes/' . $recette->image)}}" alt="{{ $recette->nom }}"
-                     class="img-responsive img-thumbnail" width="500"/>
+                     class="img-responsive img-thumbnail" width="400"/>
             @endif
         </div>
     </div>

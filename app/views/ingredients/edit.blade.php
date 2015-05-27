@@ -49,7 +49,7 @@
             {{ Form::file('image', Input::old('image'), array('class'=>'form-control', 'placeholder'=>'Image')) }}
             @if($ingredient->image)
                 <img src="{{asset('/images/ingredients/' . $ingredient->image)}}" alt="{{ $ingredient->nom }}"
-                     class="img-responsive img-thumbnail" width="500"/>
+                     class="img-responsive img-thumbnail" width="400"/>
             @endif
         </div>
     </div>

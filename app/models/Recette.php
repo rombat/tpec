@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 class Recette extends Eloquent {
 	protected $guarded = array();
 
@@ -15,7 +17,9 @@ class Recette extends Eloquent {
 		'active' => 'boolean',
         'image' => 'image|max:2000',
 		'categorie_id' => 'required|exists:categories,id',
-        'ingredients' => 'required|array'
+        'ingredients:quantite:*' => 'required|numeric',
+        'ingredients:unite:*' => 'required',
+        'ingredients:id:*' => 'required|exists:ingredients,id',
 	);
 
     public function categorie()
@@ -26,5 +30,20 @@ class Recette extends Eloquent {
     public function ingredients()
     {
         return $this->belongsToMany('Ingredient')->withPivot('quantite', 'unite');
+    }
+
+    public function getTempsCuissonAttribute($time) {
+        return self::timeFormat($time);
+    }
+
+    public function getTempsPreparationAttribute($time) {
+        return self::timeFormat($time);
+    }
+
+    public static function timeFormat($time) {
+        $timeArray = explode(':', $time);
+        $timeFormat = ($timeArray[0] != '00') ? $timeArray[0] . 'h ' : '';
+        $timeFormat .= $timeArray[1] . 'min';
+        return $timeFormat;
     }
 }

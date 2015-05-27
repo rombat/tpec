@@ -8,6 +8,8 @@ class Ingredient extends Eloquent {
 		'description' => 'required',
 		'active' => 'boolean',
         'image' => 'image|max:2000',
+        'conditionnements:id:*' => 'required|exists:conditionnements,id',
+        'conditionnements:prix:*' => 'required|numeric',
 
 	);
 

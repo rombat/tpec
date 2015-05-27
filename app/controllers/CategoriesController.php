@@ -9,7 +9,7 @@ class CategoriesController extends BaseController {
 	 */
 	public function index()
 	{
-		$categories = Categorie::whereNull('parent_id')->get();
+		$categories = Categorie::orderBy('parent_id')->get();
 
 		return View::make('categories.index', compact('categories'));
 	}

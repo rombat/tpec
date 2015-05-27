@@ -1,12 +1,12 @@
 @extends('template')
 
 @section('title')
-    Voir recette {{ $recette->nom }}
+    Fiche recette {{ $recette->nom }}
 @stop
 
 @section('main')
 
-<h1>Voir Recette</h1>
+<h1>Fiche Recette</h1>
 
 <p>{{ link_to_route('recettes.index', 'Retourner vers toutes les recettes', null, array('class'=>'btn btn-lg btn-primary')) }}</p>
 
@@ -55,7 +55,7 @@
         <h3>Ingrédients</h3>
         <ul>
             @foreach($recette->ingredients as $ingredient)
-            <li>{{ $ingredient->pivot->quantite }} {{ $ingredient->pivot->unite }} de {{ link_to_route('ingredients.show', strtolower($ingredient->nom), [$ingredient->id]) }}</li>
+            <li>{{ $ingredient->pivot->quantite }} {{ $ingredient->pivot->unite }} de {{ link_to_route('ingredients.show', mb_strtolower($ingredient->nom), [$ingredient->id]) }}</li>
             @endforeach
         </ul>
 
@@ -65,9 +65,9 @@
 
     <div class="container">
         <h3>Résumé:</h3>
-        <p>{{ $recette->resume }}</p>
+        <p>{{ nl2br(e($recette->resume)) }}</p>
         <h3>Description complète:</h3>
-        <p>{{ $recette->description }}</p>
+        <p>{{ nl2br(e($recette->description)) }}</p>
     </div>
 
 @stop

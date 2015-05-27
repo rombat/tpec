@@ -118,16 +118,18 @@ return array(
 		'Illuminate\Database\SeedServiceProvider',
 		'Illuminate\Session\SessionServiceProvider',
 		'Illuminate\Translation\TranslationServiceProvider',
-		'Illuminate\Validation\ValidationServiceProvider',
+		//'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+        /* Ajouts */
         'Barryvdh\Debugbar\ServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'Former\FormerServiceProvider',
         'Bootstrapper\BootstrapperServiceProvider',
         'Kmd\Logviewer\LogviewerServiceProvider',
-        'Dollar\Generators\GeneratorsServiceProvider'
+        'Dollar\Generators\GeneratorsServiceProvider',
+        'Cohensive\Validation\ValidationServiceProvider'
 
 	),
 

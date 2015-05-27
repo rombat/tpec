@@ -11,7 +11,28 @@
 }
 
 .navbar li {
-    font-size: 2em;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    font-size: 1.5em;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.navbar .dropdown-menu li {
+    font-size: 1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.image-reduite {
+    max-height: 50px;
+    overflow: hidden;
+}
+
+.home-center {
+    width: 518px;
+    height: 518px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: -259px 0 0 -259px;
+    text-align: center;
 }
