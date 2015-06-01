@@ -111,27 +111,53 @@
         <div class="form-group">
             {{ Form::label('ingredients', 'Ingredients:', array('class'=>'col-md-2 control-label')) }}
             <div class="col-sm-10 ingredients-group">
-                <div class="ingredients-group-input">
-                    <div class="col-sm-4 padding-input-inline-fix margin-bottom-20">
-                        {{ Form::number('ingredients[quantite][]', '', ['placeholder' => 'Quantite'])}}
-                    </div>
-                    <div class="col-sm-4 margin-bottom-20">
-                        {{ Form::text('ingredients[unite][]', '', ['placeholder' => 'Unité', 'list' => 'unites']) }}
-                        <datalist id="unites">
+                @if(Session::has('ingredients'))
+                    @foreach(Session::get('ingredients') as $ingredient)
+                        <div class="ingredients-group-input">
+                            <div class="col-sm-4 padding-input-inline-fix margin-bottom-20">
+                                {{ Form::number('ingredients[quantite][]', $ingredient['quantite'], ['placeholder' => 'Quantite'])}}
+                            </div>
+                            <div class="col-sm-4 margin-bottom-20">
+                                {{ Form::text('ingredients[unite][]', $ingredient['unite'], ['placeholder' => 'Unité', 'list' => 'unites']) }}
+                                <datalist id="unites">
 
-                            @foreach(Ingredient::unitesDispos() as $unite)
+                                    @foreach(Ingredient::unitesDispos() as $unite)
 
-                                <option value="{{ $unite->unite }}">
-                            @endforeach
-                        </datalist>
+                                        <option value="{{ $unite->unite }}">
+                                    @endforeach
+                                </datalist>
+                            </div>
+                            <div class="col-sm-4 margin-bottom-20">
+                                <?php
+                                $ingredients = Ingredient::all(['id', 'nom'])->lists('nom', 'id');
+                                ?>
+                                {{ Form::select('ingredients[id][]', $ingredients, $ingredient['id']) }}
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="ingredients-group-input">
+                        <div class="col-sm-4 padding-input-inline-fix margin-bottom-20">
+                            {{ Form::number('ingredients[quantite][]', '', ['placeholder' => 'Quantite'])}}
+                        </div>
+                        <div class="col-sm-4 margin-bottom-20">
+                            {{ Form::text('ingredients[unite][]', '', ['placeholder' => 'Unité', 'list' => 'unites']) }}
+                            <datalist id="unites">
+
+                                @foreach(Ingredient::unitesDispos() as $unite)
+
+                                    <option value="{{ $unite->unite }}">
+                                @endforeach
+                            </datalist>
+                        </div>
+                        <div class="col-sm-4 margin-bottom-20">
+                            <?php
+                            $ingredients = Ingredient::all(['id', 'nom'])->lists('nom', 'id');
+                            ?>
+                            {{ Form::select('ingredients[id][]', $ingredients, null) }}
+                        </div>
                     </div>
-                    <div class="col-sm-4 margin-bottom-20">
-                        <?php
-                        $ingredients = Ingredient::all(['id', 'nom'])->lists('nom', 'id');
-                        ?>
-                        {{ Form::select('ingredients[id][]', $ingredients, null) }}
-                    </div>
-                </div>
+                @endif
             </div>
             <div class="col-sm-offset-2 col-sm-10">
                 <p>{{ Form::button('<i class="glyphicon glyphicon-plus"></i>', ['id' => 'ajoutIngredient']) }}

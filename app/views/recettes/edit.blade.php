@@ -53,7 +53,8 @@
     <div class="form-group">
         {{ Form::label('temps_cuisson', 'Temps de cuisson:', array('class'=>'col-md-2 control-label')) }}
         <div class="col-sm-10">
-            {{ Form::text('temps_cuisson', Input::old('temps_cuisson'), array('class'=>'form-control', 'placeholder'=>'hh:mm:ss')) }}
+            {{ Form::text('temps_cuisson', Input::old('temps_cuisson'),
+            array('class'=>'form-control', 'placeholder'=>'hh:mm:ss')) }}
         </div>
     </div>
 
@@ -96,6 +97,7 @@
         <div class="col-sm-10">
             {{ Form::file('image', null, array('class'=>'form-control', 'placeholder'=>'Image')) }}
             @if($recette->image)
+                <br/>
                 <img src="{{asset('/images/recettes/' . $recette->image)}}" alt="{{ $recette->nom }}"
                      class="img-responsive img-thumbnail" width="400"/>
             @endif

@@ -14,7 +14,7 @@ class CreateConditionnementsTable extends Migration {
 	{
 		Schema::create('conditionnements', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('nom');
+			$table->string('nom')->unique();
 			$table->timestamps();
 		});
 	}

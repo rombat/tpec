@@ -41,10 +41,10 @@
                         </td>
                     <td>
                         {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('ingredients.destroy', $ingredient->id))) }}
-                        {{ Form::button('<i class="glyphicon glyphicon-remove"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
+                        {{ Form::button('<i class="fa fa-times"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
                         {{ Form::close() }}
                         <a href="{{ route('ingredients.edit', [$ingredient->id]) }}" class="btn btn-info">
-                            <i class="glyphicon glyphicon-pencil"></i></a>
+                            <i class="fa fa-pencil"></i></a>
                     </td>
 				</tr>
 			@endforeach

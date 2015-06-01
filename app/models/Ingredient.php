@@ -4,9 +4,9 @@ class Ingredient extends Eloquent {
 	protected $guarded = array();
 
 	public static $rules = array(
-		'nom' => 'required',
+		'nom' => 'required|unique:ingredients,nom',
 		'description' => 'required',
-		'active' => 'boolean',
+		'active' => 'required',
         'image' => 'image|max:2000',
         'conditionnements:id:*' => 'required|exists:conditionnements,id',
         'conditionnements:prix:*' => 'required|numeric',

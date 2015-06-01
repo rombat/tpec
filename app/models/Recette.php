@@ -14,11 +14,10 @@ class Recette extends Eloquent {
 		'difficulte' => 'required|between:1,5',
 		'nb_personnes' => 'required',
 		'prix' => 'required|numeric',
-		'active' => 'boolean',
+		'active' => 'required',
         'image' => 'image|max:2000',
 		'categorie_id' => 'required|exists:categories,id',
         'ingredients:quantite:*' => 'required|numeric',
-        'ingredients:unite:*' => 'required',
         'ingredients:id:*' => 'required|exists:ingredients,id',
 	);
 
@@ -32,18 +31,27 @@ class Recette extends Eloquent {
         return $this->belongsToMany('Ingredient')->withPivot('quantite', 'unite');
     }
 
-    public function getTempsCuissonAttribute($time) {
+/*    public function getTempsCuissonAttribute($time) {
         return self::timeFormat($time);
-    }
+    } */
 
-    public function getTempsPreparationAttribute($time) {
+/*    public function getTempsPreparationAttribute($time) {
         return self::timeFormat($time);
-    }
+    }*/
 
     public static function timeFormat($time) {
         $timeArray = explode(':', $time);
         $timeFormat = ($timeArray[0] != '00') ? $timeArray[0] . 'h ' : '';
         $timeFormat .= $timeArray[1] . 'min';
         return $timeFormat;
+    }
+
+    public function prixRevient()
+    {
+        $prix = 0;
+        foreach($this->ingredients as $ingredient) {
+            $prix += $ingredient->conditionnements()->orderBy('prix', 'desc')->first()->pivot->prix;
+        }
+        return $prix;
     }
 }

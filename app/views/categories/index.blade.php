@@ -35,10 +35,10 @@
                     {{--<td>@if($categorie->parent_id) {{ $categorie->categorieParente->nom }} @else Aucune @endif</td>--}}
                     <td>
                         {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('categories.destroy', $categorie->id))) }}
-                        {{ Form::button('<i class="glyphicon glyphicon-remove"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
+                        {{ Form::button('<i class="fa fa-times"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
                         {{ Form::close() }}
                         <a href="{{ route('categories.edit', [$categorie->id]) }}" class="btn btn-info">
-                            <i class="glyphicon glyphicon-pencil"></i></a>
+                            <i class="fa fa-pencil"></i></a>
                     </td>
                 </tr>
             @endforeach

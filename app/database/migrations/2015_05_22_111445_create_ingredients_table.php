@@ -14,7 +14,7 @@ class CreateIngredientsTable extends Migration {
 	{
 		Schema::create('ingredients', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('nom');
+			$table->string('nom')->unique();
 			$table->text('description');
 			$table->boolean('active');
 			$table->string('image');

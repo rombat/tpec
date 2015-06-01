@@ -98,7 +98,8 @@ class CategoriesController extends BaseController {
 	public function update(Categorie $categorie)
 	{
 		$input = array_except(Input::all(), '_method');
-
+        $rules = Categorie::$rules;
+        $rules['nom'] = 'required|unique:categories,nom,' . $categorie->nom;
 		$validation = Validator::make($input, Categorie::$rules);
 
 		if ($validation->passes())

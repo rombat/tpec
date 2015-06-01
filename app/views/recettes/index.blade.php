@@ -39,16 +39,16 @@
                             @php($i++)
                         @endwhile</td>
 					<td>{{{ $recette->nb_personnes }}} @if($recette->nb_personnes != 1) personnes @else personne @endif</td>
-					<td>{{ number_format($recette->prix, 2, ',', ' ') }} €</td>
+					<td>{{ number_format($recette->prix, 2, ',', ' ') }} € {{--({{ number_format($recette->prixRevient(),2, ',', ' ') }} €)--}}</td>
 					<td>@if($recette->active) <i class="fa fa-check"></i>@else <i class="fa fa-times"></i>@endif</td>
                     <td><div class="image-reduite"><img src="{{ asset('/images/recettes/' . $recette->image) }}" alt="" width="100"/></div></td>
 					<td>{{ link_to_route('categories.show', $recette->categorie->nom, [$recette->categorie->id]) }}</td>
                     <td>
                         {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('recettes.destroy', $recette->id))) }}
-                            {{ Form::button('<i class="glyphicon glyphicon-remove"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
+                            {{ Form::button('<i class="fa fa-times"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
                         {{ Form::close() }}
                         <a href="{{ route('recettes.edit', [$recette->id]) }}" class="btn btn-info">
-                            <i class="glyphicon glyphicon-pencil"></i></a>
+                            <i class="fa fa-pencil"></i></a>
                     </td>
 				</tr>
 			@endforeach

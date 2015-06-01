@@ -32,20 +32,40 @@ class ConditionnementsController extends BaseController {
 	 */
 	public function store()
 	{
-		$input = Input::all();
-		$validation = Validator::make($input, Conditionnement::$rules);
+        if(Request::ajax()) {
+            $input = Input::all();
+            $validation = Validator::make($input, Conditionnement::$rules);
 
-		if ($validation->passes())
-		{
-			Conditionnement::create($input);
+            if ($validation->passes())
+            {
+                $cond = Conditionnement::create($input);
+                $resultats = array(
+                    'id' => $cond->id,
+                    'nom' => $cond->nom
+                );
+                return Response::json($resultats, 200);
+            }
 
-			return Redirect::route('conditionnements.index');
-		}
+            return Response::json(array(
+                'success' => false,
+                'errors' => $validation->getMessageBag()->toArray()
+            ), 400);
+        } else {
+            $input = Input::all();
+            $validation = Validator::make($input, Conditionnement::$rules);
 
-		return Redirect::route('conditionnements.create')
-			->withInput()
-			->withErrors($validation)
-			->with('message', 'Erreurs de validation.');
+            if ($validation->passes())
+            {
+                Conditionnement::create($input);
+
+                return Redirect::route('conditionnements.index');
+            }
+
+            return Redirect::route('conditionnements.create')
+                ->withInput()
+                ->withErrors($validation)
+                ->with('message', 'Erreurs de validation.');
+        }
 	}
 
 	/**
@@ -84,7 +104,9 @@ class ConditionnementsController extends BaseController {
 	public function update(Conditionnement $conditionnement)
 	{
 		$input = array_except(Input::all(), '_method');
-		$validation = Validator::make($input, Conditionnement::$rules);
+        $rules = Conditionnement::$rules;
+        $rules['nom'] = 'required|unique:conditionnements,nom,' . $conditionnement->nom;
+		$validation = Validator::make($input, $rules);
 
 		if ($validation->passes())
 		{
@@ -111,5 +133,9 @@ class ConditionnementsController extends BaseController {
 
 		return Redirect::route('conditionnements.index');
 	}
+    public function storeModal()
+    {
+
+    }
 
 }

@@ -23,21 +23,21 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Recettes<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Recettes <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>{{ link_to_route('recettes.index', 'Voir toutes les recettes') }}</li>
                         <li>{{ link_to_route('recettes.create', 'Créer une nouvelle recette') }}</li>
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Ingrédients<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Ingrédients <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>{{ link_to_route('ingredients.index', 'Voir tous les ingrédients') }}</li>
                         <li>{{ link_to_route('ingredients.create', 'Créer un nouvel ingrédient') }}</li>
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Conditionnements<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Conditionnements <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>{{ link_to_route('conditionnements.index', 'Voir tous les conditionnements') }}</li>
                         <li>{{ link_to_route('conditionnements.create', 'Créer un nouveau conditionnement') }}</li>

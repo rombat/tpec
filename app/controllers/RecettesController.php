@@ -66,7 +66,7 @@ class RecettesController extends BaseController {
 		}
         //dd($validation);
 		return Redirect::route('recettes.create')
-			->withInput(Input::except(['ingredients']))
+			->withInput(Input::except(['ingredients']))->with('ingredients', Input::get('ingredients'))
 			->withErrors($validation)
 			->with('message', 'Erreurs de validation.');
 	}
@@ -142,7 +142,7 @@ class RecettesController extends BaseController {
 		}
 
 		return Redirect::route('recettes.edit', $recette->id)
-			->withInput()
+			->withInput(Input::except('ingredients'))->with('ingredients', Input::get('ingredients'))
 			->withErrors($validation)
 			->with('message', 'Erreurs de validation.');
 	}

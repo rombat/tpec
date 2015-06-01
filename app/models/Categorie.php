@@ -4,9 +4,9 @@ class Categorie extends Eloquent {
 	protected $guarded = array();
 
 	public static $rules = array(
-		'nom' => 'required',
+		'nom' => 'required|unique:categories,nom',
 		'description' => 'required',
-		'active' => 'boolean',
+		'active' => 'required',
 		'image' => 'image|max:2000',
 		'parent_id' => 'exists:categories,id'
 	);
@@ -25,4 +25,23 @@ class Categorie extends Eloquent {
     {
         return $this->hasMany('Categorie', 'parent_id');
     }
+
+    public function recettesTotales()
+    {
+        $recettes = $this->recettes;
+        foreach($this->sousCategories as $sousCat) {
+           $recettes = $recettes->merge($sousCat->recettes);
+        }
+        return $recettes;
+    }
+
+    public function ingredients()
+    {
+        $ingredients = new \Illuminate\Database\Eloquent\Collection();
+        foreach ($this->recettesTotales() as $recette) {
+            $ingredients = $ingredients->merge($recette->ingredients);
+        }
+        return $ingredients;
+    }
+
 }

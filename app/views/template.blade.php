@@ -6,6 +6,7 @@
     {{ HTML::style(asset('/css/bootstrap.min.css')) }}
     {{ HTML::style(asset('/css/font-awesome.min.css')) }}
     {{ HTML::style(asset('/css/perso.css')) }}
+    @yield('styles_additionnels')
 </head>
 
 <body>

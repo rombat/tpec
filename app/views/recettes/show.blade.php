@@ -14,10 +14,10 @@
     <div class="row">
         <div class="pull-right" style="margin-top: 20px; margin-bottom: 10px;">
             {{ Form::open(array('style' => 'display: inline-block;', 'method' => 'DELETE', 'route' => array('recettes.destroy', $recette->id))) }}
-            {{ Form::button('<i class="glyphicon glyphicon-remove"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
+            {{ Form::button('<i class="fa fa-times"></i>', array('type' => 'submit', 'class' => 'btn btn-danger')) }}
             {{ Form::close() }}
             <a href="{{ route('recettes.edit', [$recette->id]) }}" class="btn btn-info">
-                <i class="glyphicon glyphicon-pencil"></i></a>
+                <i class="fa fa-pencil"></i></a>
         </div>
         <h2>@if($recette->categorie->parent_id) {{ link_to_route('categories.show', $recette->categorie->categorieParente->nom, [$recette->categorie->categorieParente->id]) }} <i class="fa fa-angle-right"></i> @endif
             {{ link_to_route('categories.show', $recette->categorie->nom, [$recette->categorie->id]) }} <i class="fa fa-angle-right"></i> {{ $recette->nom }}</h2>
@@ -40,9 +40,9 @@
             @endwhile</span>
         </p>
 
-        <p><strong>Temps de préparation:</strong> <span class="pull-right">{{ $recette->temps_preparation }}</span></p>
+        <p><strong>Temps de préparation:</strong> <span class="pull-right">{{ Recette::timeFormat($recette->temps_preparation) }}</span></p>
 
-        @if($recette->temps_cuisson)<p><strong>Temps de cuisson:</strong> <span class="pull-right">{{ $recette->temps_cuisson }}</span></p>@endif
+        @if($recette->temps_cuisson)<p><strong>Temps de cuisson:</strong> <span class="pull-right">{{ Recette::timeFormat($recette->temps_cuisson) }}</span></p>@endif
 
         <p><strong>Recette pour:</strong> <span class="pull-right">{{ $recette->nb_personnes }} @if($recette->nb_personnes > 1) personnes @else personne @endif</span></p>
 
@@ -55,7 +55,7 @@
         <h3>Ingrédients</h3>
         <ul>
             @foreach($recette->ingredients as $ingredient)
-            <li>{{ $ingredient->pivot->quantite }} {{ $ingredient->pivot->unite }} de {{ link_to_route('ingredients.show', mb_strtolower($ingredient->nom), [$ingredient->id]) }}</li>
+            <li>{{ $ingredient->pivot->quantite }} {{ $ingredient->pivot->unite }} @if($ingredient->pivot->unite)de @endif {{ link_to_route('ingredients.show', mb_strtolower($ingredient->nom), [$ingredient->id]) }}</li>
             @endforeach
         </ul>
 

@@ -67,7 +67,7 @@ class IngredientsController extends BaseController {
 			return Redirect::route('ingredients.index');
 		}
 		return Redirect::route('ingredients.create')
-			->withInput()
+			->withInput(Input::except('conditionnements'))->with('conditionnements', Input::get('conditionnements'))
 			->withErrors($validation)
 			->with('message', 'Erreurs de validation.');
 	}
@@ -108,14 +108,16 @@ class IngredientsController extends BaseController {
 	public function update(Ingredient  $ingredient)
 	{
 		$input = array_except(Input::all(), ['_method']);
-		$validation = Validator::make($input, Ingredient::$rules);
+        $rules = Ingredient::$rules;
+        $rules['nom'] = 'required|unique:ingredients,nom,' . $ingredient->id;
+		$validation = Validator::make($input, $rules);
 
 		if ($validation->passes())
 		{
             if(Input::hasFile('image')) {
                 // On uploade l'image
                 $image = Input::file('image');
-                $destinationPath = public_path() . '/images/categories';
+                $destinationPath = public_path() . '/images/ingredients';
                 $filename = Str::slug(Input::get('nom')) . '.' . $image->getClientOriginalExtension();
                 $image->move($destinationPath, $filename);
                 // On stocke son nom en base:
@@ -140,6 +142,8 @@ class IngredientsController extends BaseController {
 
 			return Redirect::route('ingredients.show', $ingredient->id);
 		}
+
+        dd($validation->errors());
 
 		return Redirect::route('ingredients.edit', $ingredient->id)
 			->withInput()

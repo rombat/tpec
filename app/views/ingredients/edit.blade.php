@@ -48,6 +48,7 @@
         <div class="col-sm-10">
             {{ Form::file('image', Input::old('image'), array('class'=>'form-control', 'placeholder'=>'Image')) }}
             @if($ingredient->image)
+                <br/>
                 <img src="{{asset('/images/ingredients/' . $ingredient->image)}}" alt="{{ $ingredient->nom }}"
                      class="img-responsive img-thumbnail" width="400"/>
             @endif
@@ -55,7 +56,11 @@
     </div>
 
     <div class="form-group">
-        {{ Form::label('conditionnements[]', 'Conditionnements:', array('class'=>'col-md-2 control-label')) }}
+        <div class="col-md-2 text-right">
+            {{ Form::label('conditionnements[]', 'Conditionnements:', array('class'=>'control-label')) }}
+            <br/>
+            <small class="btn btn-xs btn-info" data-toggle="modal" data-target="#ajoutConditionnementModal"><i class="fa fa-plus-square"></i> en ajouter un</small>
+        </div>
         <div class="col-sm-10 conditionnements-group">
             @foreach($ingredient->conditionnements as $conditionnement)
                 <div class="row conditionnements-group-input">
@@ -63,7 +68,7 @@
                         <?php
                         $conditionnements = Conditionnement::all()->lists('nom', 'id');
                         ?>
-                        {{ Form::select('conditionnements[id][]', $conditionnements, $conditionnement->id) }}
+                        {{ Form::select('conditionnements[id][]', $conditionnements, $conditionnement->id, ['class' => 'cond_select']) }}
                     </div>
                     <div class="input-group col-sm-6 margin-bottom-20">
                         {{ Form::number('conditionnements[prix][]', $conditionnement->pivot->prix, array('class'=>'form-control', 'placeholder'=>'Prix', 'step' => '0.01')) }}
@@ -91,6 +96,8 @@
 
     {{ Form::close() }}
 
+    @include('conditionnements.create_modal')
+
 @stop
 
 @section('scripts_additionnels')
@@ -117,6 +124,50 @@
                 x--;
             }
         });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#storeModal').click(function (e) {
+                e.preventDefault();
+                var cond_nom = $('#nom_cond').val();
+                var url = $('#ajoutConditionnement').attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "nom=" + cond_nom,
+                    cache: false,
+                    success: function (data) {
+                        $('#cond_success').removeClass('hidden');
+                        $('#cond_errors').addClass('hidden');
+                        $('.cond_select').each(function () {
+                            $(this).append('<option value=' + data.id + '>' + data.nom + '</option>');
+                        });
+                        return data;
+
+                    }
+                }).fail(function(data) {
+                    console.log(data);
+                    $('#cond_errors').removeClass('hidden');
+                    $('#cond_success').addClass('hidden');
+                    var response = JSON.parse(data.responseText);
+                    var errorString = '<ul>';
+                    $.each( response.errors, function( key, value) {
+                        errorString += '<li>' + value + '</li>';
+                    });
+                    errorString += '</ul>';
+                    $('#cond_errors').html(errorString);
+                });
+                return false;
+            });
+            // On ferme l'alert success quand on ferme le modal
+            $('#ajoutConditionnementModal').on('hidden.bs.modal', function (e) {
+                $('#cond_success').addClass('hidden');
+                $('#cond_errors').addClass('hidden');
+            })
+        });
+
     </script>
 @stop
 
