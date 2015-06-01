@@ -3,9 +3,15 @@
 use Carbon\Carbon;
 
 class Recette extends Eloquent {
-	protected $guarded = array();
+    /**
+     * @var array
+     */
+    protected $guarded = array();
 
-	public static $rules = array(
+    /**
+     * @var array
+     */
+    public static $rules = array(
 		'nom' => 'required',
 		'resume' => 'required',
 		'description' => 'required',
@@ -21,24 +27,28 @@ class Recette extends Eloquent {
         'ingredients:id:*' => 'required|exists:ingredients,id',
 	);
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function categorie()
     {
         return $this->belongsTo('Categorie');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function ingredients()
     {
         return $this->belongsToMany('Ingredient')->withPivot('quantite', 'unite');
     }
 
-/*    public function getTempsCuissonAttribute($time) {
-        return self::timeFormat($time);
-    } */
 
-/*    public function getTempsPreparationAttribute($time) {
-        return self::timeFormat($time);
-    }*/
-
+    /**
+     * Formate une heure rentrée au format hh:mm:ss en une chaine de caractère formatée en [$i]h [$j]min
+     * @param $time
+     * @return string
+     */
     public static function timeFormat($time) {
         $timeArray = explode(':', $time);
         $timeFormat = ($timeArray[0] != '00') ? $timeArray[0] . 'h ' : '';
@@ -46,6 +56,10 @@ class Recette extends Eloquent {
         return $timeFormat;
     }
 
+    /**
+     * Calcule le prix de revient "à la louche" d'une recette, en se basant sur les ingrédients les plus chers du site utilisés dans la recette
+     * @return int
+     */
     public function prixRevient()
     {
         $prix = 0;

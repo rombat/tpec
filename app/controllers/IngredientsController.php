@@ -1,36 +1,37 @@
 <?php
 
+/**
+ * Class IngredientsController
+ * Controlleur pour les ingrédients
+ */
 class IngredientsController extends BaseController {
 
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * Renvoie une vue de l'ensemble des conditionnements
+     * @return \Illuminate\View\View Vue conditionnements.index
+     */
+    public function index()
 	{
 		$ingredients = Ingredient::orderBy('nom')->get();
 
 		return View::make('ingredients.index', compact('ingredients'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+    /**
+     * Renvoie la vue pour créer un conditionnement
+     * @return \Illuminate\View\View Vue conditionnements.create
+     */
+    public function create()
 	{
 		return View::make('ingredients.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+    /**
+     * Méthode pour créer un conditionnement
+     * @return \Illuminate\Http\RedirectResponse Redirection vers l'index des conditionnements
+     */
+    public function store()
 	{
 		$input = Input::all();
 		$validation = Validator::make($input, Ingredient::$rules);
@@ -72,24 +73,24 @@ class IngredientsController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  Ingredient  $ingredient
-	 * @return Response
-	 */
-	public function show(Ingredient  $ingredient)
+
+    /**
+     * Vue d'un conditionnement
+     * @param Conditionnement $conditionnement Instance d'un conditionnement
+     * @return \Illuminate\View\View Vue conditionnements.show
+     */
+    public function show(Ingredient  $ingredient)
 	{
 		return View::make('ingredients.show', compact('ingredient'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  Ingredient  $ingredient
-	 * @return Response
-	 */
-	public function edit(Ingredient  $ingredient)
+
+    /**
+     * Vue pour éditer un conditionnement
+     * @param Ingredient $ingredient Instance d'un ingrédient
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View Vue ingredients.edit
+     */
+    public function edit(Ingredient  $ingredient)
 	{
 		if (is_null($ingredient))
 		{
@@ -99,13 +100,13 @@ class IngredientsController extends BaseController {
 		return View::make('ingredients.edit', compact('ingredient'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  Ingredient  $ingredient
-	 * @return Response
-	 */
-	public function update(Ingredient  $ingredient)
+
+    /**
+     * Mettre à jour un ingrédient
+     * @param Ingredient $ingredient Instance d'un ingrédient
+     * @return \Illuminate\Http\RedirectResponse Retourne la vue de l'ingrédient mis à jour, ou la vue pour éditer l'ingrédient en cas d'erreur
+     */
+    public function update(Ingredient  $ingredient)
 	{
 		$input = array_except(Input::all(), ['_method']);
         $rules = Ingredient::$rules;
@@ -151,13 +152,14 @@ class IngredientsController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  Ingredient  $ingredient
-	 * @return Response
-	 */
-	public function destroy(Ingredient  $ingredient)
+
+    /**
+     * Détruit l'ingrédient passé en parametre
+     * @param Ingredient $ingredient Instance d'un ingrédient
+     * @return \Illuminate\Http\RedirectResponse Renvoie vers ingredients.index
+     * @throws Exception
+     */
+    public function destroy(Ingredient  $ingredient)
 	{
 		$ingredient->delete();
 

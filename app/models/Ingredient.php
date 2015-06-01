@@ -1,9 +1,15 @@
 <?php
 
 class Ingredient extends Eloquent {
-	protected $guarded = array();
+    /**
+     * @var array
+     */
+    protected $guarded = array();
 
-	public static $rules = array(
+    /**
+     * @var array
+     */
+    public static $rules = array(
 		'nom' => 'required|unique:ingredients,nom',
 		'description' => 'required',
 		'active' => 'required',
@@ -13,16 +19,27 @@ class Ingredient extends Eloquent {
 
 	);
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function conditionnements()
     {
         return $this->belongsToMany('Conditionnement')->withPivot('prix');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function recettes()
     {
         return $this->belongsToMany('Recette')->withPivot('quantite', 'unite');
     }
 
+
+    /**
+     * Retourne une collection des unités déja rentrées pour les ingrédients
+     * @return \Illuminate\Database\Eloquent\Collection|static
+     */
     public static function unitesDispos()
     {
         $unites = DB::table('ingredient_recette')->select(['unite'])->distinct()->get();

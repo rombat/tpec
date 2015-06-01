@@ -1,35 +1,39 @@
 <?php
 
+/**
+ * Class CategoriesController
+ * Controller pour les catégories
+ */
 class CategoriesController extends BaseController {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+
+    /**
+     * Renvoie une vue de l'ensemble des catégories
+     * @return \Illuminate\View\View Vue categories.index
+     */
+    public function index()
 	{
 		$categories = Categorie::orderBy('parent_id')->get();
 
 		return View::make('categories.index', compact('categories'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+
+    /**
+     * Renvoie la vue pour créer une catégorie
+     * @return \Illuminate\View\View Vue categories.create
+     */
+    public function create()
 	{
 		return View::make('categories.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+
+    /**
+     * Méthode pour créer une catégorie
+     * @return \Illuminate\Http\RedirectResponse Redirection vers l'index des catégories
+     */
+    public function store()
 	{
 		$input = Input::all();
         //dd($input);
@@ -62,24 +66,24 @@ class CategoriesController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  Categorie $categorie
-	 * @return Response
-	 */
-	public function show(Categorie $categorie)
+
+    /**
+     * Vue d'une catégorie
+     * @param Categorie $categorie Instance d'une catégorie
+     * @return \Illuminate\View\View Vue categories.show
+     */
+    public function show(Categorie $categorie)
 	{
 		return View::make('categories.show', compact('categorie'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit(Categorie $categorie)
+
+    /**
+     * Vue pour éditer une catégorie
+     * @param Categorie $categorie Instance d'une catégorie
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View Vue categories.edit
+     */
+    public function edit(Categorie $categorie)
 	{
 		if (is_null($categorie))
 		{
@@ -89,13 +93,13 @@ class CategoriesController extends BaseController {
 		return View::make('categories.edit', compact('categorie', 'categories'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  Categorie $categorie
-	 * @return Response
-	 */
-	public function update(Categorie $categorie)
+
+    /**
+     * Mettre à jour une catégorie
+     * @param Categorie $categorie Instance d'une catégorie
+     * @return \Illuminate\Http\RedirectResponse Retourne la vue de la catégorie mise à jour, ou la vue pour éditer la catégorie en cas d'erreur
+     */
+    public function update(Categorie $categorie)
 	{
 		$input = array_except(Input::all(), '_method');
         $rules = Categorie::$rules;
@@ -130,13 +134,14 @@ class CategoriesController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  Categorie $categorie
-	 * @return Response
-	 */
-	public function destroy(Categorie $categorie)
+
+    /**
+     * Détruit la catégorie passée en parametre
+     * @param Categorie $categorie Instance de la catégori
+     * @return \Illuminate\Http\RedirectResponse Retourne vers l'index des catégories
+     * @throws Exception
+     */
+    public function destroy(Categorie $categorie)
 	{
 		$categorie->delete();
 

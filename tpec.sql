@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: May 31, 2015 at 11:55 PM
+-- Generation Time: Jun 08, 2015 at 07:13 AM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.7
 
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `conditionnement_ingredient` (
   `conditionnement_id` int(10) unsigned DEFAULT NULL,
   `ingredient_id` int(10) unsigned DEFAULT NULL,
   `prix` float(8,2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `conditionnement_ingredient`
@@ -205,7 +205,12 @@ INSERT INTO `conditionnement_ingredient` (`id`, `conditionnement_id`, `ingredien
 (13, 9, 11, 7.50),
 (14, 10, 12, 2.50),
 (15, 2, 13, 3.50),
-(16, 2, 14, 3.50);
+(16, 2, 14, 3.50),
+(17, 8, 15, 6.70),
+(18, 1, 16, 2.50),
+(19, 2, 17, 3.50),
+(20, 1, 18, 3.50),
+(21, 3, 19, 4.50);
 
 -- --------------------------------------------------------
 
@@ -240,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `ingredients` (
   `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `ingredients`
@@ -260,7 +265,12 @@ INSERT INTO `ingredients` (`id`, `nom`, `description`, `active`, `image`, `creat
 (11, 'Vin rouge', 'Bouteille de St Emilion Chateau Machin de 2014', 1, 'vin-rouge.jpg', '2015-05-28 13:12:57', '2015-05-28 13:12:57'),
 (12, 'Beurre', 'Beurre de Normandie, moulé à la louche', 1, 'beurre.jpg', '2015-05-28 13:17:41', '2015-05-28 13:17:41'),
 (13, 'Sel', 'Sel de Guérande', 1, 'sel.jpg', '2015-05-28 13:19:20', '2015-05-28 13:19:20'),
-(14, 'Poivre', 'Poivre noir', 1, 'poivre.jpg', '2015-05-28 13:20:56', '2015-05-28 13:20:56');
+(14, 'Poivre', 'Poivre noir', 1, 'poivre.jpg', '2015-05-28 13:20:56', '2015-05-28 13:20:56'),
+(15, 'Truite', 'Truite saumonée d''élevage, ~300g la truite.', 0, 'truite.jpg', '2015-06-01 08:03:27', '2015-06-01 08:03:27'),
+(16, 'Echalotes', 'Echalotes du sud ouest.', 1, 'echalotes.jpg', '2015-06-01 08:04:28', '2015-06-01 08:13:43'),
+(17, 'Citron', 'Citron jaune', 0, 'citron.jpg', '2015-06-01 08:06:05', '2015-06-01 08:06:05'),
+(18, 'Ciboulette', 'Fraiche', 0, 'ciboulette.jpg', '2015-06-01 08:08:02', '2015-06-01 08:08:02'),
+(19, 'Huile d''olive', 'de Provence, pressée à froid', 0, 'huile-dolive.jpg', '2015-06-01 08:09:23', '2015-06-01 08:09:23');
 
 -- --------------------------------------------------------
 
@@ -274,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `ingredient_recette` (
   `recette_id` int(10) unsigned DEFAULT NULL,
   `quantite` int(11) NOT NULL,
   `unite` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `ingredient_recette`
@@ -292,7 +302,14 @@ INSERT INTO `ingredient_recette` (`id`, `ingredient_id`, `recette_id`, `quantite
 (9, 11, 2, 1, 'bouteille'),
 (10, 12, 2, 100, 'g'),
 (11, 13, 2, 2, 'pincées'),
-(12, 14, 2, 1, 'pincée');
+(12, 14, 2, 1, 'pincée'),
+(13, 15, 3, 500, 'g'),
+(14, 16, 3, 2, ''),
+(15, 17, 3, 1, ''),
+(16, 18, 3, 1, 'botte'),
+(17, 19, 3, 2, 'cuillères à soupe'),
+(18, 13, 3, 1, 'pincée'),
+(19, 14, 3, 1, 'pincée');
 
 -- --------------------------------------------------------
 
@@ -341,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `recettes` (
   `categorie_id` int(10) unsigned DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `recettes`
@@ -349,7 +366,8 @@ CREATE TABLE IF NOT EXISTS `recettes` (
 
 INSERT INTO `recettes` (`id`, `nom`, `resume`, `description`, `temps_preparation`, `temps_cuisson`, `difficulte`, `nb_personnes`, `prix`, `active`, `image`, `categorie_id`, `created_at`, `updated_at`) VALUES
 (1, 'Pizza', 'Une recette simple, rapide et qui ravira tous les amateurs de cuisine italienne!\r\nVous pouvez également faire la pâte vous même mais cela prend un peu plus de temps.\r\nPour commencer, il vous faut...', 'Faire cuire dans une poêle les lardons et les champignons.\r\n\r\nDans un bol, verser la boîte de concentré de tomate, y ajouter un demi verre d''eau, ensuite mettre un carré de sucre (pour enlever l''acidité de la tomate) une pincée de sel, de poivre, et une pincée d''herbe de Provence.\r\n\r\nDérouler la pâte à pizza sur la lèche frite de votre four et la piquer.\r\n\r\nAvec une cuillère à soupe, étaler délicatement la sauce tomate, ensuite y ajouter les lardons et les champignons bien dorer. Parsemer de fromage râpée.\r\n\r\nMettre au four à 220°, thermostat 7-8, pendant 20 min (ou lorsque le dessus de la pizza est doré).', '00:15:00', '00:30:00', 1, 5, 1.05, 1, 'pizza.jpg', 3, '2015-05-27 17:21:44', '2015-05-29 06:52:56'),
-(2, 'Bœuf bourguignon', 'Le traditionnel et indémodable boeuf bourguignon, à faire longtemps mijoter et à accompagner d''un Bourgogne, forcément.', 'Détailler la viande en cubes de 3 cm de côté, enlever les gros morceaux de gras.\r\n\r\nCouper l''oignon en morceaux. Le faire revenir dans une poêle au beurre. Une fois transparent, versez le dans une cocotte en fonte de préférence.\r\n\r\nProcéder de même avec la viande mais en plusieurs fois, jusqu''à ce que tous les morceaux soient cuits. Les ajouter au fur et à mesure dans la cocotte. Ne pas avoir peur de rajouter du beurre entre chaque fournée. Quand toute la viande est dans la cocotte, déglacer la poêle avec de l''eau ou du vin et faire bouillir en raclant pour récupérer le suc. Saler, poivrer, ajouter au reste.\r\n\r\nRecouvrir le tout avec une partie du vin et faire mijoter quelques heures avec le bouquet garni et les carottes en rondelles.\r\n\r\nLe lendemain, faire mijoter au moins 2 heures en plusieurs fois, ajouter du vin ou de l''eau si nécessaire.', '01:00:00', '05:00:00', 4, 4, 2.50, 1, 'boeuf-bourguignon.jpg', 2, '2015-05-28 13:25:15', '2015-05-28 13:25:15');
+(2, 'Bœuf bourguignon', 'Le traditionnel et indémodable boeuf bourguignon, à faire longtemps mijoter et à accompagner d''un Bourgogne, forcément.', 'Détailler la viande en cubes de 3 cm de côté, enlever les gros morceaux de gras.\r\n\r\nCouper l''oignon en morceaux. Le faire revenir dans une poêle au beurre. Une fois transparent, versez le dans une cocotte en fonte de préférence.\r\n\r\nProcéder de même avec la viande mais en plusieurs fois, jusqu''à ce que tous les morceaux soient cuits. Les ajouter au fur et à mesure dans la cocotte. Ne pas avoir peur de rajouter du beurre entre chaque fournée. Quand toute la viande est dans la cocotte, déglacer la poêle avec de l''eau ou du vin et faire bouillir en raclant pour récupérer le suc. Saler, poivrer, ajouter au reste.\r\n\r\nRecouvrir le tout avec une partie du vin et faire mijoter quelques heures avec le bouquet garni et les carottes en rondelles.\r\n\r\nLe lendemain, faire mijoter au moins 2 heures en plusieurs fois, ajouter du vin ou de l''eau si nécessaire.', '01:00:00', '05:00:00', 4, 4, 2.50, 1, 'boeuf-bourguignon.jpg', 2, '2015-05-28 13:25:15', '2015-05-28 13:25:15'),
+(3, 'Tartare de truite', 'Facile, frais et délicieux, une entrée qui ravira tous vos convives.', 'Réservez les filets de truite pendant environ 15 min au congélateur pour les raffermir. Refroidissez aussi les assiettes de service en les plaçant au frigo.\r\n\r\nPendant ce temps, lavez soigneusement la salade, essorez-la et réservez-la. Hachez finement les filets de truite à l''aide d''un couteau à large lame dès la sortie du congélateur.\r\n\r\nPressez le citron, pelez et hachez les échalotes. Ajoutez-les à la chair du poisson avec la ciboulette ciselée, le jus de citron et l''huile d''olive.\r\n\r\nSalez et poivrez. Moulez la préparation obtenue en forme de quenelles en vous aidant de deux c. à soupe.\r\n\r\nDisposez ce tartare sur les assiettes très froides que vous aurez garnies de salade. Accompagnez de tranches de pain grillé. Servez très frais sans attendre.', '00:20:00', '00:00:00', 1, 4, 1.20, 1, 'tartare-de-truite.jpg', 1, '2015-06-01 08:12:15', '2015-06-01 08:12:15');
 
 -- --------------------------------------------------------
 
@@ -469,7 +487,7 @@ ALTER TABLE `conditionnements`
 -- AUTO_INCREMENT for table `conditionnement_ingredient`
 --
 ALTER TABLE `conditionnement_ingredient`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `etat`
 --
@@ -479,17 +497,17 @@ ALTER TABLE `etat`
 -- AUTO_INCREMENT for table `ingredients`
 --
 ALTER TABLE `ingredients`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `ingredient_recette`
 --
 ALTER TABLE `ingredient_recette`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `recettes`
 --
 ALTER TABLE `recettes`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- Constraints for dumped tables
 --

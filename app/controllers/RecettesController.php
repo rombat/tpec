@@ -1,36 +1,37 @@
 <?php
 
+/**
+ * Class RecettesController
+ * Controlleur pour les recettes
+ */
 class RecettesController extends BaseController {
 
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /** Index des recettes
+     * @return \Illuminate\View\View Vue recettes.index
+     */
+    public function index()
 	{
 		$recettes = Recette::orderBy('nom')->get();
 
 		return View::make('recettes.index', compact('recettes'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+
+    /**Création d'une recette
+     * @return \Illuminate\View\View Vue recettes.create
+     */
+    public function create()
 	{
 		return View::make('recettes.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+
+    /**
+     * Créer une recette
+     * @return \Illuminate\Http\RedirectResponse Vue recettes.index si validé, sinon recettes.create avec erreurs
+     */
+    public function store()
 	{
 		$input = Input::all();
 		$validation = Validator::make($input, Recette::$rules);
@@ -71,24 +72,24 @@ class RecettesController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  Recette  $recette
-	 * @return Response
-	 */
-	public function show(Recette  $recette)
+
+    /**
+     * Voir une recette
+     * @param Recette $recette Instance d'une recette
+     * @return \Illuminate\View\View Vue recettes.show
+     */
+    public function show(Recette  $recette)
 	{
 		return View::make('recettes.show', compact('recette'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  Recette  $recette
-	 * @return Response
-	 */
-	public function edit(Recette  $recette)
+
+    /**
+     * Editer une recette
+     * @param Recette $recette Instance d'une recette
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View Vue recettes.edit
+     */
+    public function edit(Recette  $recette)
 	{
 		if (is_null($recette))
 		{
@@ -98,13 +99,13 @@ class RecettesController extends BaseController {
 		return View::make('recettes.edit', compact('recette'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  Recette  $recette
-	 * @return Response
-	 */
-	public function update(Recette  $recette)
+
+    /**
+     * Mettre à jour une recette
+     * @param Recette $recette Instance d'une recette
+     * @return \Illuminate\Http\RedirectResponse Vue recettes.show si validé, sinon recettes.edit
+     */
+    public function update(Recette  $recette)
 	{
 		$input = array_except(Input::all(), '_method');
 		$validation = Validator::make($input, Recette::$rules);
@@ -147,13 +148,14 @@ class RecettesController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy(Recette  $recette)
+
+    /**
+     * Détruire une recette
+     * @param Recette $recette Instance d'une recette
+     * @return \Illuminate\Http\RedirectResponse Vue recettes.index
+     * @throws Exception
+     */
+    public function destroy(Recette  $recette)
 	{
 		$recette->delete();
 

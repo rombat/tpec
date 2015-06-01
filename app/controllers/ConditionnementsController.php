@@ -1,36 +1,39 @@
 <?php
 
+/**
+ * Class ConditionnementsController
+ * Controlleur pour les conditionnements
+ */
 class ConditionnementsController extends BaseController {
 
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * Renvoie une vue de l'ensemble des conditionnements
+     * @return \Illuminate\View\View Vue conditionnements.index
+     */
+    public function index()
 	{
 		$conditionnements = Conditionnement::orderBy('nom')->get();
 
 		return View::make('conditionnements.index', compact('conditionnements'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+    /**
+     * Renvoie la vue pour créer un conditionnement
+     * @return \Illuminate\View\View Vue conditionnements.create
+     */
+    public function create()
 	{
 		return View::make('conditionnements.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+
+    /**
+     * Méthode pour créer un conditionnement
+     * @return \Illuminate\Http\RedirectResponse Redirection vers l'index des conditionnements
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse Renvoie les résultats de l'insert en json si la requete d'entrée est en ajax
+     */
+    public function store()
 	{
         if(Request::ajax()) {
             $input = Input::all();
@@ -68,24 +71,24 @@ class ConditionnementsController extends BaseController {
         }
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  Conditionnement  $conditionnement
-	 * @return Response
-	 */
-	public function show(Conditionnement $conditionnement)
+
+    /**
+     * Vue d'un conditionnement
+     * @param Conditionnement $conditionnement Instance d'un conditionnement
+     * @return \Illuminate\View\View Vue conditionnements.show
+     */
+    public function show(Conditionnement $conditionnement)
 	{
 		return View::make('conditionnements.show', compact('conditionnement'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  Conditionnement  $conditionnement
-	 * @return Response
-	 */
-	public function edit(Conditionnement $conditionnement)
+
+    /**
+     * Vue pour éditer un conditionnement
+     * @param Conditionnement $conditionnement Instance d'un conditionnement
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View Vue conditionnements.edit
+     */
+    public function edit(Conditionnement $conditionnement)
 	{
 		if (is_null($conditionnement))
 		{
@@ -95,13 +98,13 @@ class ConditionnementsController extends BaseController {
 		return View::make('conditionnements.edit', compact('conditionnement'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  Conditionnement  $conditionnement
-	 * @return Response
-	 */
-	public function update(Conditionnement $conditionnement)
+
+    /**
+     * Mettre à jour un conditionnement
+     * @param Conditionnement $conditionnement
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View Vue conditionnements.show si validé, sinon conditionnements.edit
+     */
+    public function update(Conditionnement $conditionnement)
 	{
 		$input = array_except(Input::all(), '_method');
         $rules = Conditionnement::$rules;
@@ -121,21 +124,18 @@ class ConditionnementsController extends BaseController {
 			->with('message', 'Erreurs de validation.');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  Conditionnement  $conditionnement
-	 * @return Response
-	 */
-	public function destroy(Conditionnement  $conditionnement)
+
+    /**
+     * Détruit le conditionnement passé en parametre
+     * @param Conditionnement $conditionnement Instance du conditionnement
+     * @return \Illuminate\Http\RedirectResponse Retourne vers l'index des conditionnements
+     * @throws Exception
+     */
+    public function destroy(Conditionnement  $conditionnement)
 	{
 		$conditionnement->delete();
 
 		return Redirect::route('conditionnements.index');
 	}
-    public function storeModal()
-    {
-
-    }
 
 }
